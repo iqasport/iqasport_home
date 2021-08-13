@@ -1,0 +1,33 @@
+diff --git a/node_modules/gatsby-source-wordpress/fetch.js b/node_modules/gatsby-source-wordpress/fetch.js
+index a434321..8aa8ee6 100644
+--- a/node_modules/gatsby-source-wordpress/fetch.js
++++ b/node_modules/gatsby-source-wordpress/fetch.js
+@@ -434,7 +434,7 @@ function getValidRoutes({
+       const entityType = getRawEntityType(route); // Excluding the "technical" API Routes
+ 
+       const excludedTypes = [undefined, `v2`, `v3`, `1.0`, `2.0`, `embed`, `proxy`, ``, baseUrl];
+-      const routePath = getRoutePath(url, route._links.self);
++      const routePath = getRoutePath(url, route._links.self[0].href);
+ 
+       if (excludedTypes.includes(entityType)) {
+         // Grab ACF Version from routes
+@@ -476,7 +476,7 @@ function getValidRoutes({
+         }
+ 
+         validRoutes.push({
+-          url: route._links.self,
++          url: route._links.self[0].href,
+           type: validType
+         });
+       }
+@@ -524,7 +524,9 @@ function getValidRoutes({
+  */
+ 
+ 
+-const getRawEntityType = route => route._links.self.substring(route._links.self.lastIndexOf(`/`) + 1, route._links.self.length);
++const getRawEntityType = route => {
++  return route._links.self[0].href.substring(route._links.self[0].href.lastIndexOf(`/`) + 1, route._links.self[0].href.length);
++}
+ /**
+  * Extract the route path for an endpoint
+  *
